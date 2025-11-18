@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 import Icon from '@/components/ui/icon';
 
 const stockData = [
@@ -50,6 +52,10 @@ export default function Index() {
   const [weight, setWeight] = useState('');
   const [pricePerKg, setPricePerKg] = useState('50');
   const [calculatedPrice, setCalculatedPrice] = useState(0);
+  const [formName, setFormName] = useState('');
+  const [formPhone, setFormPhone] = useState('');
+  const [formMessage, setFormMessage] = useState('');
+  const { toast } = useToast();
 
   const calculatePrice = () => {
     const w = parseFloat(weight);
@@ -59,13 +65,32 @@ export default function Index() {
     }
   };
 
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formName || !formPhone) {
+      toast({
+        title: 'Ошибка',
+        description: 'Заполните имя и телефон',
+        variant: 'destructive'
+      });
+      return;
+    }
+    toast({
+      title: 'Заявка отправлена!',
+      description: 'Мы свяжемся с вами в ближайшее время'
+    });
+    setFormName('');
+    setFormPhone('');
+    setFormMessage('');
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Icon name="Boxes" size={28} className="text-accent" />
-            <h1 className="text-xl font-bold">МеталлПрокат</h1>
+            <h1 className="text-xl font-bold">МЕТАЛЛКОМ</h1>
           </div>
           <nav className="hidden md:flex gap-6">
             <a href="#catalog" className="text-sm hover:text-accent transition-colors">Каталог</a>
@@ -188,6 +213,61 @@ export default function Index() {
                   <p className="text-4xl font-bold text-accent">{calculatedPrice.toLocaleString()} ₽</p>
                 </div>
               )}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      <section className="py-16 bg-accent/5 border-y border-accent/20">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <Card className="shadow-xl">
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl flex items-center justify-center gap-2">
+                <Icon name="Send" size={28} className="text-accent" />
+                Быстрая заявка
+              </CardTitle>
+              <CardDescription className="text-base">Оставьте заявку и мы свяжемся с вами для уточнения деталей</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleFormSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Имя *</Label>
+                    <Input
+                      id="name"
+                      placeholder="Ваше имя"
+                      value={formName}
+                      onChange={(e) => setFormName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Телефон *</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="+7 (___) ___-__-__"
+                      value={formPhone}
+                      onChange={(e) => setFormPhone(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="message">Комментарий</Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Укажите толщину металла, вес и другие пожелания"
+                    rows={4}
+                    value={formMessage}
+                    onChange={(e) => setFormMessage(e.target.value)}
+                  />
+                </div>
+                <Button type="submit" size="lg" className="w-full gap-2">
+                  <Icon name="Send" size={18} />
+                  Отправить заявку
+                </Button>
+              </form>
             </CardContent>
           </Card>
         </div>
@@ -326,7 +406,7 @@ export default function Index() {
 
       <footer className="border-t border-border py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2024 МеталлПрокат. Все права защищены.</p>
+          <p>© 2024 МЕТАЛЛКОМ. Все права защищены.</p>
         </div>
       </footer>
     </div>
