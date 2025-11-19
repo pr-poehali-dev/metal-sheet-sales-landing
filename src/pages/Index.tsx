@@ -386,7 +386,7 @@ export default function Index() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="flex flex-col items-center gap-2">
               <Icon name="Phone" size={24} />
-              <p className="font-semibold">+7 (495) 123-45-67</p>
+              <p className="font-semibold mx-[1px] px-[3px] text-yellow-800">+7 (495) 123-45-67</p>
             </div>
             <div className="flex flex-col items-center gap-2">
               <Icon name="Mail" size={24} />
